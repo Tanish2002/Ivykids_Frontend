@@ -15,6 +15,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from "@nextui-org/dropdown";
+import { signOut } from "next-auth/react";
 
 export default function NavbarComp() {
   return (
@@ -58,7 +59,11 @@ export default function NavbarComp() {
               base: "gap-4",
             }}
           >
-            <DropdownItem key="logout" startContent={<LogOut />}>
+            <DropdownItem
+              onClick={() => signOut()}
+              key="logout"
+              startContent={<LogOut />}
+            >
               Logout
             </DropdownItem>
           </DropdownMenu>

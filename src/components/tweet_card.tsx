@@ -3,8 +3,13 @@ import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 import Image from "next/image";
 import React from "react";
-
-const TweetCard = () => {
+interface TweetCardProps {
+  name: string;
+  username: string;
+  timestamp: string;
+  content: string;
+}
+const TweetCard = ({ name, username, timestamp, content }: TweetCardProps) => {
   return (
     <Card className="py-2 px-4 flex flex-col gap-1">
       <CardHeader className="pb-0 pt-2 px-4">

@@ -1,11 +1,19 @@
+import { ADDTWEET } from "@/utils/queries";
+import { useMutation } from "@apollo/client";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody } from "@nextui-org/card";
 import { Textarea } from "@nextui-org/input";
-import React from "react";
+import { useSession } from "next-auth/react";
+import React, { useState } from "react";
 import { Image, Video } from "react-feather";
 
 const TweetInput = () => {
+  const { data: session } = useSession();
+  const [content, setContent] = useState("");
+
+  const [addTweet, { loading }] = useMutation(ADDTWEET);
+
   return (
     <Card>
       <CardBody className="grid grid-cols-[5fr_95fr]">
@@ -13,8 +21,21 @@ const TweetInput = () => {
           className="mr-5 mt-3"
           src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
         />
-        <div>
-          <Textarea placeholder="What's happening?!" />
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            addTweet({
+              variables: { authorID: session!.user.id, content: content },
+            });
+          }}
+        >
+          <Textarea
+            inputMode="text"
+            placeholder="What's happening?!"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            isRequired
+          />
           <div className="flex justify-between mt-2">
             <div className="flex gap-2">
               <Button isIconOnly aria-label="Image">
@@ -30,9 +51,17 @@ const TweetInput = () => {
                 <input className="hidden" id="video-input" type="file" />
               </Button>
             </div>
-            <Button color="primary">Tweet</Button>
+            {loading ? (
+              <Button isLoading color="secondary">
+                Adding
+              </Button>
+            ) : (
+              <Button type="submit" color="primary">
+                Tweet
+              </Button>
+            )}
           </div>
-        </div>
+        </form>
       </CardBody>
     </Card>
   );
