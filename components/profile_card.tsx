@@ -4,7 +4,7 @@ import React from "react";
 
 export default function ProfileCard() {
   return (
-    <Card className="max-w-[340px]">
+    <Card className="max-w-sm">
       <CardHeader className="flex-col justify-between">
         <div className="flex flex-col justify-center items-center gap-5">
           <Avatar

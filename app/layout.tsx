@@ -1,7 +1,6 @@
 import "@/styles/globals.css";
 import { Metadata } from "next";
 import { Providers } from "./providers";
-import clsx from "clsx";
 import NavbarComp from "@/components/navbar";
 import { Nunito } from "next/font/google";
 
@@ -27,15 +26,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head />
-      <body
-        className={clsx(
-          "dark text-foreground bg-background  min-h-screen font-sans antialiased",
-          nunito.className,
-        )}
-      >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <body className={nunito.className}>
+        <Providers>
           <NavbarComp />
           <div className="container mx-auto pt-16 px-6">{children}</div>
         </Providers>

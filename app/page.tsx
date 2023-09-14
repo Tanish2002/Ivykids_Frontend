@@ -8,9 +8,11 @@ export default function Home() {
   return (
     <>
       <div className="grid grid-cols-[1fr_2fr]">
-        <aside className="flex flex-col gap-y-9 top-0 sticky h-screen">
-          <ProfileCard />
-          <UsersCard />
+        <aside className="">
+          <div className="flex flex-col gap-y-9 fixed">
+            <ProfileCard />
+            <UsersCard />
+          </div>
         </aside>
         <main className="flex flex-col gap-y-9">
           <TweetInput />

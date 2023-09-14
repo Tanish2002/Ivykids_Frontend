@@ -1,5 +1,6 @@
+"use client";
 import React from "react";
-import { Home, MoreHorizontal, Twitter, User } from "react-feather";
+import { Home, LogOut, MoreHorizontal, Twitter, User } from "react-feather";
 import {
   Navbar,
   NavbarBrand,
@@ -52,12 +53,14 @@ export default function NavbarComp() {
             </DropdownTrigger>
           </NavbarItem>
           <DropdownMenu
-            aria-label="More options"
+            aria-label="More Options"
             itemClasses={{
               base: "gap-4",
             }}
           >
-            <DropdownItem key="logout">Logout</DropdownItem>
+            <DropdownItem key="logout" startContent={<LogOut />}>
+              Logout
+            </DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </NavbarContent>

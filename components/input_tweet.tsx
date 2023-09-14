@@ -3,7 +3,7 @@ import { Button } from "@nextui-org/button";
 import { Card, CardBody } from "@nextui-org/card";
 import { Textarea } from "@nextui-org/input";
 import React from "react";
-import { Image } from "react-feather";
+import { Image, Video } from "react-feather";
 
 const TweetInput = () => {
   return (
@@ -16,8 +16,21 @@ const TweetInput = () => {
         <div>
           <Textarea placeholder="What's happening?!" />
           <div className="flex justify-between mt-2">
-            <Image className="stroke-violet-400" size={20} />
-            <Button color="primary"></Button>
+            <div className="flex gap-2">
+              <Button isIconOnly aria-label="Image">
+                <label htmlFor="image-input">
+                  <Image className="stroke-violet-400" size={20} />
+                </label>
+                <input className="hidden" id="image-input" type="file" />
+              </Button>
+              <Button isIconOnly aria-label="Image">
+                <label htmlFor="video-input">
+                  <Video className="stroke-violet-400" size={20} />
+                </label>
+                <input className="hidden" id="video-input" type="file" />
+              </Button>
+            </div>
+            <Button color="primary">Tweet</Button>
           </div>
         </div>
       </CardBody>
