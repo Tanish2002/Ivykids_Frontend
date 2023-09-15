@@ -10,7 +10,7 @@ import { setContext } from "@apollo/client/link/context";
 import { getSession, useSession } from "next-auth/react";
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:9090/graphql",
+  uri: "https://ivy-backend.onrender.com/graphql",
 });
 export const ApolloWrapper = ({ children }: { children: React.ReactNode }) => {
   const client = () => {

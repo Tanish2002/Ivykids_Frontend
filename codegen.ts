@@ -1,6 +1,6 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
 const config: CodegenConfig = {
-  schema: "http://localhost:9090/graphql",
+  schema: "https://ivy-backend.onrender.com/graphql",
   documents: ["src/**/*.ts"],
   generates: {
     "./src/types/gql/": {

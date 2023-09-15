@@ -12,7 +12,7 @@ import { getServerSession } from "next-auth";
 
 export const { getClient } = registerApolloClient(() => {
   const httpLink = createHttpLink({
-    uri: "http://localhost:9090/graphql",
+    uri: "https://ivy-backend.onrender.com/graphql",
   });
 
   const authLink = setContext(async (_, { headers }) => {
