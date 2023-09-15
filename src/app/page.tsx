@@ -40,7 +40,7 @@ export default function Home() {
     if (networkStatus === NetworkStatus.refetch) {
       refetch();
     }
-  }, [networkStatus]);
+  }, [networkStatus, refetch]);
   return (
     <>
       {!user.data ? (

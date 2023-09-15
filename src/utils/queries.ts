@@ -20,6 +20,32 @@ export const LOGINMUTATION = graphql(/* GraphQL */ `
   }
 `);
 
+export const REGISTERMUTATION = graphql(/* GraphQL */ `
+  mutation AddUser(
+    $username: String!
+    $password: String!
+    $name: String!
+    $bio: String
+  ) {
+    addUser(username: $username, password: $password, name: $name, bio: $bio) {
+      token
+      user {
+        id
+        username
+        name
+        password
+        bio
+        followers {
+          id
+        }
+        following {
+          id
+        }
+      }
+    }
+  }
+`);
+
 export const ADDTWEET = graphql(/* GraphQL */ `
   mutation AddTweet($content: String!, $authorID: String!) {
     addTweet(content: $content, authorID: $authorID) {

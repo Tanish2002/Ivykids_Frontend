@@ -6,6 +6,7 @@ import { Eye, EyeOff, User } from "react-feather";
 
 import { signIn, useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 const loginUser = (formData: FormData) => {
   const username = formData.get("username");
@@ -33,6 +34,9 @@ const Login = () => {
 
   return (
     <>
+      <div>TEST LOGIN DETAILS</div>
+      <div>USERNAME: User2</div>
+      <div>PASSWORD: 123456789</div>
       <div className="flex flex-col justify-center items-center">
         <h1 className="text-2xl">Login</h1>
         <form action={loginUser} className="flex flex-col items-center gap-4">
@@ -66,6 +70,9 @@ const Login = () => {
             className="max-w-xs"
           />
           <Button type="submit">Login</Button>
+          <Button type="submit" onClick={() => redirect("/register")}>
+            Register
+          </Button>
         </form>
       </div>
     </>

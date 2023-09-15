@@ -22,10 +22,10 @@ const ProfilePage = () => {
     GETUSERTWEETS,
     user.data
       ? {
-          variables: { user_id: user.data!.user.id },
-          notifyOnNetworkStatusChange: true,
-          fetchPolicy: "no-cache",
-        }
+        variables: { user_id: user.data!.user.id },
+        notifyOnNetworkStatusChange: true,
+        fetchPolicy: "no-cache",
+      }
       : { skip: true },
   );
 
@@ -33,7 +33,7 @@ const ProfilePage = () => {
     if (networkStatus === NetworkStatus.refetch) {
       refetch();
     }
-  }, [networkStatus]);
+  }, [networkStatus, refetch]);
 
   return (
     <>
