@@ -6,7 +6,7 @@ import { Card, CardBody } from "@nextui-org/card";
 import { Textarea } from "@nextui-org/input";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-import { Image, Video } from "react-feather";
+import { Image, User, Video } from "react-feather";
 
 const TweetInput = () => {
   const { data: session } = useSession();
@@ -17,16 +17,14 @@ const TweetInput = () => {
   return (
     <Card>
       <CardBody className="grid grid-cols-[5fr_95fr]">
-        <Avatar
-          className="mr-5 mt-3"
-          src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
-        />
+        <Avatar className="mr-5 mt-3" icon={<User />} />
         <form
           onSubmit={(e) => {
             e.preventDefault();
             addTweet({
               variables: { authorID: session!.user.id, content: content },
             });
+            setContent("");
           }}
         >
           <Textarea

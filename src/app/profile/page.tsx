@@ -1,38 +1,31 @@
 "use client";
-import TweetInput from "@/components/input_tweet";
 import ProfileCard from "@/components/profile_card";
 import TweetCard from "@/components/tweet_card";
 import UsersCard from "@/components/users_card";
-import { GETFOLLOWINGTWEETS } from "@/utils/queries";
+import { GETUSERTWEETS } from "@/utils/queries";
 import { NetworkStatus } from "@apollo/client";
 import { useQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 import { Spinner } from "@nextui-org/spinner";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
-export default function Home() {
-  // Redirect user if no session found
+const ProfilePage = () => {
   const user = useSession();
-
-  if (!user.data?.user) {
-    redirect("/login");
-  }
 
   const {
     data: posts,
-    networkStatus,
     refetch,
     loading,
     error,
+    networkStatus,
   } = useQuery(
-    GETFOLLOWINGTWEETS,
+    GETUSERTWEETS,
     user.data
       ? {
-        variables: { user_id: user.data.user.id },
-        fetchPolicy: "network-only",
-        notifyOnNetworkStatusChange: true,
-      }
+          variables: { user_id: user.data!.user.id },
+          notifyOnNetworkStatusChange: true,
+          fetchPolicy: "no-cache",
+        }
       : { skip: true },
   );
 
@@ -41,9 +34,10 @@ export default function Home() {
       refetch();
     }
   }, [networkStatus]);
+
   return (
     <>
-      {!user.data ? (
+      {!user.data || user.status !== "authenticated" ? (
         <Spinner color="primary" label="Loading..." />
       ) : (
         <div className="grid grid-cols-3">
@@ -60,19 +54,22 @@ export default function Home() {
             </div>
           </aside>
           <main className="flex flex-col gap-y-9 col-span-2">
-            <TweetInput />
             {!posts || loading ? (
               <Spinner label="Loading..." color="default" />
             ) : error ? (
               <div>Error {`${error}`}</div>
             ) : (
-              posts.tweetsByFollowing?.map((post, idx) => (
+              posts.tweets?.map((post, idx) => (
                 <TweetCard
                   key={idx}
-                  name={post!.author!.name!}
-                  username={post!.author!.username!}
+                  name={user.data.user.name!}
+                  username={user.data.user.username!}
                   content={post!.content!}
                   timestamp={post!.createdAt!}
+                  userTweet={{
+                    tweet_id: post!.id!,
+                    refetch: refetch,
+                  }}
                 />
               ))
             )}
@@ -81,4 +78,6 @@ export default function Home() {
       )}
     </>
   );
-}
+};
+
+export default ProfilePage;

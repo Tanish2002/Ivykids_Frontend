@@ -7,15 +7,16 @@ import {
 
 import { registerApolloClient } from "@apollo/experimental-nextjs-app-support/rsc";
 import { setContext } from "@apollo/client/link/context";
-import { useSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
+// import { useSession } from "next-auth/react";
 
 export const { getClient } = registerApolloClient(() => {
   const httpLink = createHttpLink({
     uri: "http://localhost:9090/graphql",
   });
 
-  const authLink = setContext((_, { headers }) => () => {
-    const { data: session } = useSession();
+  const authLink = setContext(async (_, { headers }) => {
+    const session = await getServerSession();
     console.log(session?.user.token);
     const token = session?.user.token;
 

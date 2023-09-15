@@ -14,7 +14,7 @@ const loginUser = (formData: FormData) => {
     username: username,
     password: password,
     callbackUrl: "/",
-    redirect: false,
+    // redirect: false,
   })
     .then(() => console.log("Logged IN"))
     .catch((err) => console.log(err));

@@ -23,11 +23,11 @@ export default function NavbarComp() {
       <NavbarBrand>
         <Twitter className="fill-blue-500 stroke-none" size={30} />
         <Home className="stroke-blue-500 ml-3 mr-2" size={20} />
-        <div className="font-bold text-inherit text-xl text-blue-500">Home</div>
+        <Link className="font-bold text-inherit text-xl text-blue-500" href="/">Home</Link>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="end">
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <Link color="foreground" href="/profile">
             <Button
               disableRipple
               className="p-0 bg-transparent data-[hover=true]:bg-transparent"

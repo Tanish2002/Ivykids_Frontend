@@ -1,10 +1,8 @@
+import { LOGINMUTATION } from "@/utils/queries";
+import { useMutation } from "@apollo/client";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { graphql } from "@/types/gql";
-import { LOGINMUTATION } from "@/utils/queries";
 import { getClient } from "./apollo-client";
-
-const login = graphql(LOGINMUTATION);
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -23,12 +21,13 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         const u = await getClient().mutate({
-          mutation: login,
+          mutation: LOGINMUTATION,
           variables: {
             username: credentials!.username,
             password: credentials!.password,
           },
         });
+
         if (u.errors) {
           console.log(u.errors);
           return null;
@@ -38,14 +37,25 @@ export const authOptions: NextAuthOptions = {
         const name = u.data?.loginUser?.user?.name;
         const bio = u.data?.loginUser?.user?.bio;
         const token = u.data?.loginUser?.token;
+        const followers = u.data?.loginUser?.user?.followers?.length;
+        const following = u.data?.loginUser?.user?.following?.length;
 
-        if (id && username && name && token) {
+        if (
+          id &&
+          username &&
+          name &&
+          token &&
+          following != undefined &&
+          followers != undefined
+        ) {
           return {
             id: id,
             username: username,
             name: name,
             bio: bio ?? null,
             token: token,
+            followers: followers,
+            following: following,
           };
         }
         return null;
@@ -56,17 +66,20 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         return {
-          ...token,
-          user_id: user.id,
-          token: user.token,
+          user: user,
         };
       }
       return token;
     },
     async session({ session, token }) {
       if (token) {
-        session.user.token = token.token;
-        session.user.id = token.user_id;
+        session.user.token = token.user.token;
+        session.user.id = token.user.id;
+        session.user.username = token.user.username;
+        session.user.name = token.user.name;
+        session.user.bio = token.user.bio;
+        session.user.followers = token.user.followers;
+        session.user.following = token.user.following;
       }
       return { ...session };
     },
