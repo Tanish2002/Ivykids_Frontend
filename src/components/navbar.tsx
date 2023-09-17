@@ -16,14 +16,17 @@ import {
   DropdownTrigger,
 } from "@nextui-org/dropdown";
 import { signOut } from "next-auth/react";
+import { useQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 
 export default function NavbarComp() {
   return (
     <Navbar>
       <NavbarBrand>
         <Twitter className="fill-blue-500 stroke-none" size={30} />
-        <Home className="stroke-blue-500 ml-3 mr-2" size={20} />
-        <Link className="font-bold text-inherit text-xl text-blue-500" href="/">Home</Link>
+        <Link className="font-bold text-inherit text-xl text-blue-500" href="/">
+          <Home className="stroke-blue-500 ml-3 mr-2" size={20} />
+          Home
+        </Link>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="end">
         <NavbarItem>

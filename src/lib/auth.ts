@@ -3,6 +3,7 @@ import { useMutation } from "@apollo/client";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getClient } from "./apollo-client";
+import { signOut } from "next-auth/react";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -82,6 +83,12 @@ export const authOptions: NextAuthOptions = {
         session.user.following = token.user.following;
       }
       return { ...session };
+    },
+  },
+  events: {
+    async signOut() {
+      console.log("Signing OUT");
+      await getClient().resetStore();
     },
   },
 };

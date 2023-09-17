@@ -1,28 +1,36 @@
-import { UPDATEUSER } from "@/utils/queries";
+"use client";
+import { GETUSER, UPDATEUSER } from "@/utils/queries";
 import { useMutation } from "@apollo/client";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Card, CardHeader } from "@nextui-org/card";
-import React from "react";
+import React, { useEffect } from "react";
 import { User } from "react-feather";
 
 interface UserCardProps {
-  session_user_id: string;
+  current_user_id: string;
   name: string;
   username: string;
   user_id: string;
-  refetch: any;
+  reset_is_followed: boolean;
 }
 
 const UserCard = ({
   name,
   username,
-  refetch,
   user_id,
-  session_user_id,
+  current_user_id,
+  reset_is_followed,
 }: UserCardProps) => {
   const [isFollowed, setIsFollowed] = React.useState(false);
-  const [editUser] = useMutation(UPDATEUSER);
+  const [editUser] = useMutation(UPDATEUSER, {
+    refetchQueries: [GETUSER],
+  });
+
+  useEffect(() => {
+    setIsFollowed(false);
+  }, [reset_is_followed]);
+
   return (
     <>
       <Card className="max-w-sm mb-2 shadow-none border-none">
@@ -53,23 +61,18 @@ const UserCard = ({
               if (!isFollowed) {
                 editUser({
                   variables: {
-                    user_id: session_user_id,
+                    user_id: current_user_id,
                     followingToAdd: [user_id],
                   },
                 });
               } else {
                 editUser({
                   variables: {
-                    user_id: session_user_id,
+                    user_id: current_user_id,
                     followingToRemove: [user_id],
                   },
                 });
               }
-              // Refetch new users after 1000ms
-              setTimeout(() => {
-                refetch();
-                setIsFollowed(!isFollowed);
-              }, 1000);
             }}
           >
             {isFollowed ? "Unfollow" : "Follow"}

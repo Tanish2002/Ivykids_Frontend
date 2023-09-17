@@ -1,10 +1,16 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
+
 const config: CodegenConfig = {
-  schema: "https://ivy-backend.onrender.com/graphql",
-  documents: ["src/**/*.ts"],
+  overwrite: true,
+  schema: "http://localhost:9090/graphql",
+  documents: "src/**/*.ts",
   generates: {
-    "./src/types/gql/": {
+    "src/types/gql/": {
       preset: "client",
+      plugins: [],
+    },
+    "./graphql.schema.json": {
+      plugins: ["introspection"],
     },
   },
 };

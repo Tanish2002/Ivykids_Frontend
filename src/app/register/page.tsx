@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import { REGISTERMUTATION } from "@/utils/queries";
 import { getClient } from "@/lib/apollo-client";
 import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 const registerUser = async (formData: FormData) => {
   "use server";
@@ -27,7 +28,7 @@ const registerUser = async (formData: FormData) => {
   });
 
   if (user.errors) {
-    console.log(user.errors);
+    // console.log(user.errors);
     return;
   }
 
@@ -44,7 +45,7 @@ const registerUser = async (formData: FormData) => {
 
 const Register = async () => {
   // Redirect user if session found
-  const user = await getServerSession();
+  const user = await getServerSession(authOptions);
   if (user) {
     redirect("/");
   }

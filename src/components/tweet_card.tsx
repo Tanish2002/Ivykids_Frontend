@@ -1,28 +1,17 @@
-import { DELETETWEET } from "@/utils/queries";
-import { useMutation } from "@apollo/client";
 import { Avatar } from "@nextui-org/avatar";
-import { Button } from "@nextui-org/button";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-} from "@nextui-org/dropdown";
 import moment from "moment";
 import Image from "next/image";
 import React from "react";
-import { MoreVertical, User } from "react-feather";
+import { TweetCardDropDown } from "./tweet_card_dropdown";
+import { User } from "react-feather";
 interface TweetCardProps {
   name: string;
   username: string;
   timestamp: string;
   content: string;
-  userTweet?: {
-    tweet_id: string;
-    refetch: any;
-  };
+  tweet_id?: string;
 }
 
 function getTimeAgo(timestamp: string) {
@@ -33,25 +22,14 @@ function getTimeAgo(timestamp: string) {
   const formattedDifference = `${Math.floor(hoursDifference)}h ago`;
   return formattedDifference;
 }
+
 const TweetCard = ({
   name,
   username,
   timestamp,
   content,
-  userTweet,
+  tweet_id,
 }: TweetCardProps) => {
-  const [deleteTweet] = useMutation(DELETETWEET);
-
-  const menuHandler = (key: React.Key) => {
-    switch (key) {
-      case "edit":
-
-      case "delete":
-        deleteTweet({ variables: { tweet_id: userTweet!.tweet_id } });
-        userTweet!.refetch();
-    }
-  };
-
   return (
     <Card className="py-2 px-4 flex flex-col gap-1">
       <CardHeader className="pb-0 pt-2 px-4">
@@ -64,32 +42,7 @@ const TweetCard = ({
               {getTimeAgo(timestamp)}
             </p>
           </div>
-          {userTweet && (
-            <div>
-              <Dropdown>
-                <DropdownTrigger>
-                  <Button
-                    variant="bordered"
-                    isIconOnly
-                    startContent={<MoreVertical />}
-                  />
-                </DropdownTrigger>
-                <DropdownMenu
-                  aria-label="Action event example"
-                  onAction={(key) => menuHandler(key)}
-                >
-                  <DropdownItem key="edit">Edit tweet</DropdownItem>
-                  <DropdownItem
-                    key="delete"
-                    className="text-danger"
-                    color="danger"
-                  >
-                    Delete tweet
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </div>
-          )}
+          {tweet_id && <TweetCardDropDown tweet_id={tweet_id} />}
         </div>
       </CardHeader>
       <Divider />

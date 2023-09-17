@@ -18,7 +18,8 @@ const documents = {
     "\n  mutation AddTweet($content: String!, $authorID: String!) {\n    addTweet(content: $content, authorID: $authorID) {\n      id\n      content\n    }\n  }\n": types.AddTweetDocument,
     "\n  query FollowingTweets($user_id: ID!) {\n    tweetsByFollowing(user_id: $user_id) {\n      id\n      content\n      createdAt\n      author {\n        username\n        name\n      }\n    }\n  }\n": types.FollowingTweetsDocument,
     "\n  query UsersNotFollowing($user_id: ID!) {\n    usersNotFollowing(user_id: $user_id) {\n      id\n      username\n      name\n    }\n  }\n": types.UsersNotFollowingDocument,
-    "\n  query Tweets($user_id: ID!) {\n    tweets(author_id: $user_id) {\n      id\n      content\n      createdAt\n    }\n  }\n": types.TweetsDocument,
+    "\n  query User($user_id: ID!) {\n    user(user_id: $user_id) {\n      username\n      name\n      bio\n      followers {\n        id\n      }\n      following {\n        id\n      }\n    }\n  }\n": types.UserDocument,
+    "\n  query Tweets($user_id: ID!) {\n    tweets(author_id: $user_id) {\n      id\n      content\n      createdAt\n      author {\n        username\n        name\n      }\n    }\n  }\n": types.TweetsDocument,
     "\n  mutation DeleteTweet($tweet_id: ID!) {\n    deleteTweet(tweet_id: $tweet_id) {\n      id\n    }\n  }\n": types.DeleteTweetDocument,
     "\n  mutation UpdateUser(\n    $user_id: String!\n    $name: String\n    $bio: String\n    $followingToAdd: [ID]\n    $followingToRemove: [ID]\n  ) {\n    updateUser(\n      user_id: $user_id\n      followingToAdd: $followingToAdd\n      followingToRemove: $followingToRemove\n      name: $name\n      bio: $bio\n    ) {\n      id\n      username\n      name\n      password\n      bio\n    }\n  }\n": types.UpdateUserDocument,
 };
@@ -60,7 +61,11 @@ export function graphql(source: "\n  query UsersNotFollowing($user_id: ID!) {\n 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query Tweets($user_id: ID!) {\n    tweets(author_id: $user_id) {\n      id\n      content\n      createdAt\n    }\n  }\n"): (typeof documents)["\n  query Tweets($user_id: ID!) {\n    tweets(author_id: $user_id) {\n      id\n      content\n      createdAt\n    }\n  }\n"];
+export function graphql(source: "\n  query User($user_id: ID!) {\n    user(user_id: $user_id) {\n      username\n      name\n      bio\n      followers {\n        id\n      }\n      following {\n        id\n      }\n    }\n  }\n"): (typeof documents)["\n  query User($user_id: ID!) {\n    user(user_id: $user_id) {\n      username\n      name\n      bio\n      followers {\n        id\n      }\n      following {\n        id\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query Tweets($user_id: ID!) {\n    tweets(author_id: $user_id) {\n      id\n      content\n      createdAt\n      author {\n        username\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query Tweets($user_id: ID!) {\n    tweets(author_id: $user_id) {\n      id\n      content\n      createdAt\n      author {\n        username\n        name\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

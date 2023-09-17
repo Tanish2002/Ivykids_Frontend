@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
+"use client";
 import UserCard from "./user";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { GETUSERNOTFOLLOWING } from "@/utils/queries";
-import { useQuery } from "@apollo/experimental-nextjs-app-support/ssr";
+import { Button } from "@nextui-org/button";
+import { useState } from "react";
+import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 
 const UsersCard = ({ user_id }: { user_id: string }) => {
-  const data = useQuery(GETUSERNOTFOLLOWING, {
+  const data = useSuspenseQuery(GETUSERNOTFOLLOWING, {
     variables: { user_id: user_id },
   });
 
+  const [resetIsFollowed, setResetIsFollowed] = useState(false); // Add this state
   return (
     <Card className="max-w-sm max-h-screen">
       <CardHeader className="text-center">
@@ -16,24 +19,31 @@ const UsersCard = ({ user_id }: { user_id: string }) => {
       </CardHeader>
 
       <CardBody>
-        {data.loading ? (
-          <div>Loading</div>
-        ) : data.error ? (
+        {data.error ? (
           <div>Error: {`${data.error}`}</div>
         ) : (
-          data?.data?.usersNotFollowing
+          data.data.usersNotFollowing
             ?.slice(0, 4)
             .map((nonFollower, idx) => (
               <UserCard
                 key={idx}
-                username={nonFollower!.username!}
-                name={nonFollower!.name!}
-                user_id={nonFollower!.id!}
-                session_user_id={user_id}
-                refetch={data.refetch}
+                username={nonFollower?.username!}
+                name={nonFollower?.name!}
+                user_id={nonFollower?.id!}
+                current_user_id={user_id}
+                reset_is_followed={resetIsFollowed}
               />
             ))
         )}
+        <Button
+          variant="flat"
+          onClick={() => {
+            data.refetch({ user_id: user_id });
+            setResetIsFollowed(!resetIsFollowed);
+          }}
+        >
+          Load More
+        </Button>
       </CardBody>
     </Card>
   );

@@ -2,8 +2,15 @@ import "@/styles/globals.css";
 import { Metadata } from "next";
 import NavbarComp from "@/components/navbar";
 import { Nunito } from "next/font/google";
-const nunito = Nunito({ subsets: ["latin"] });
+import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
+import React from "react";
+import { Providers } from "@/lib/providers";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 
+const nunito = Nunito({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Twitter Clone",
   description: "Twitter Clone made by Tanish2002",
@@ -11,22 +18,20 @@ export const metadata: Metadata = {
     { media: "(prefers-color-scheme: light)", color: "white" },
     { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
-  },
 };
-
-import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
-import React from "react";
-import { Providers } from "@/lib/providers";
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession(authOptions);
+  // Need to do this weird redirection coz usePathname isn't available for rsc (https://github.com/vercel/next.js/issues/43704)
+  const headersList = headers();
+  const pathname = headersList.get("x-pathname") ?? "/";
+  if (!session && pathname !== "/login" && pathname !== "/register") {
+    redirect("/login");
+  }
+
   loadDevMessages();
   loadErrorMessages();
 
@@ -35,7 +40,7 @@ export default function RootLayout({
       <body
         className={`min-h-screen font-sans antialiased ${nunito.className}`}
       >
-        <Providers>
+        <Providers session={session!}>
           <NavbarComp />
           <div className="container mx-auto pt-16 px-6">{children}</div>
         </Providers>

@@ -79,12 +79,32 @@ export const GETUSERNOTFOLLOWING = graphql(/* GraphQL */ `
   }
 `);
 
-export const GETUSERTWEETS = graphql(/*GraphQL */ `
+export const GETUSER = graphql(/* GraphQL */ `
+  query User($user_id: ID!) {
+    user(user_id: $user_id) {
+      username
+      name
+      bio
+      followers {
+        id
+      }
+      following {
+        id
+      }
+    }
+  }
+`);
+
+export const GETUSERTWEETS = graphql(/* GraphQL */ `
   query Tweets($user_id: ID!) {
     tweets(author_id: $user_id) {
       id
       content
       createdAt
+      author {
+        username
+        name
+      }
     }
   }
 `);

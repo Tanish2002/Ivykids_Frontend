@@ -1,25 +1,15 @@
+"use client";
+import { GETUSER } from "@/utils/queries";
+import { useSuspenseQuery } from "@apollo/client";
 import { Avatar } from "@nextui-org/avatar";
 import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
-import { useSession } from "next-auth/react";
-import { type } from "os";
 import React from "react";
 import { User } from "react-feather";
 
-interface ProfileCardProps {
-  username: string;
-  name: string;
-  bio: string | null;
-  following: number;
-  followers: number;
-}
-
-export default function ProfileCard({
-  username,
-  name,
-  bio,
-  following,
-  followers,
-}: ProfileCardProps) {
+export default function ProfileCard({ user_id }: { user_id: string }) {
+  const user = useSuspenseQuery(GETUSER, { variables: { user_id: user_id } });
+  const followers = user.data.user?.followers?.length;
+  const following = user.data.user?.following?.length;
   return (
     <Card className="max-w-sm w-full h-1/3">
       <CardHeader className="flex-col justify-between">
@@ -31,16 +21,16 @@ export default function ProfileCard({
           />
           <div className="flex flex-col gap-1 items-start justify-center">
             <h4 className="text-small font-semibold leading-none text-default-600">
-              {name}
+              {user.data.user?.name}
             </h4>
             <h5 className="text-small tracking-tight text-default-400">
-              @{username}
+              @{user.data.user?.username}
             </h5>
           </div>
         </div>
       </CardHeader>
       <CardBody className="px-3 py-0 text-small text-center">
-        <p>{bio}</p>
+        <p>{user.data.user?.bio}</p>
       </CardBody>
       <CardFooter className="gap-3 pb-10">
         <div className="grid grid-cols-2 grid-rows-2 gap-3 w-full mx-7">
