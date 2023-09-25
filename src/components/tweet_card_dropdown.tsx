@@ -1,6 +1,6 @@
 "use client";
+import { gqlClient } from "@/lib/query-client";
 import { DELETETWEET, GETUSERTWEETS } from "@/utils/queries";
-import { useMutation } from "@apollo/client";
 import { Button } from "@nextui-org/button";
 import {
   Dropdown,
@@ -8,20 +8,26 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from "@nextui-org/dropdown";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { MoreVertical } from "react-feather";
 
 export const TweetCardDropDown = ({ tweet_id }: { tweet_id: string }) => {
-  const [deleteTweet] = useMutation(DELETETWEET, {
-    variables: { tweet_id: tweet_id },
+  const queryClient = useQueryClient();
+  const deleteTweet = useMutation({
+    mutationFn: async () => {
+      return gqlClient.request(DELETETWEET, { tweet_id: tweet_id });
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["GETUSERTWEETS"] });
+    },
   });
+
   const menuHandler = (key: React.Key) => {
     switch (key) {
       case "edit":
 
       case "delete":
-        deleteTweet({
-          refetchQueries: [GETUSERTWEETS, "Tweets"],
-        });
+        deleteTweet.mutate();
     }
   };
   return (

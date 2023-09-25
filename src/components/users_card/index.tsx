@@ -4,13 +4,16 @@ import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { GETUSERNOTFOLLOWING } from "@/utils/queries";
 import { Button } from "@nextui-org/button";
 import { useState } from "react";
-import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
+import { gqlClient } from "@/lib/query-client";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 const UsersCard = ({ user_id }: { user_id: string }) => {
-  const data = useSuspenseQuery(GETUSERNOTFOLLOWING, {
-    variables: { user_id: user_id },
+  const data = useSuspenseQuery({
+    queryKey: ["usersNotFollowing"],
+    queryFn: async () => {
+      return gqlClient.request(GETUSERNOTFOLLOWING, { user_id: user_id });
+    },
   });
-
   const [resetIsFollowed, setResetIsFollowed] = useState(false); // Add this state
   return (
     <Card className="max-w-sm max-h-screen">
@@ -22,7 +25,7 @@ const UsersCard = ({ user_id }: { user_id: string }) => {
         {data.error ? (
           <div>Error: {`${data.error}`}</div>
         ) : (
-          data.data.usersNotFollowing
+          data.data?.usersNotFollowing
             ?.slice(0, 4)
             .map((nonFollower, idx) => (
               <UserCard
@@ -38,7 +41,7 @@ const UsersCard = ({ user_id }: { user_id: string }) => {
         <Button
           variant="flat"
           onClick={() => {
-            data.refetch({ user_id: user_id });
+            data.refetch();
             setResetIsFollowed(!resetIsFollowed);
           }}
         >

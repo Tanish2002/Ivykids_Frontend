@@ -2,7 +2,6 @@ import "@/styles/globals.css";
 import { Metadata } from "next";
 import NavbarComp from "@/components/navbar";
 import { Nunito } from "next/font/google";
-import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 import React from "react";
 import { Providers } from "@/lib/providers";
 import { getServerSession } from "next-auth";
@@ -31,9 +30,6 @@ export default async function RootLayout({
   if (!session && pathname !== "/login" && pathname !== "/register") {
     redirect("/login");
   }
-
-  loadDevMessages();
-  loadErrorMessages();
 
   return (
     <html lang="en" className="dark" suppressHydrationWarning>

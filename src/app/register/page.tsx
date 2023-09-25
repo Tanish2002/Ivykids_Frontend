@@ -6,9 +6,11 @@ import { User } from "react-feather";
 import { signIn } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { REGISTERMUTATION } from "@/utils/queries";
-import { getClient } from "@/lib/apollo-client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { gqlClient } from "@/lib/query-client";
+import { Link } from "@nextui-org/link";
+import NextLink from "next/link";
 
 const registerUser = async (formData: FormData) => {
   "use server";
@@ -17,24 +19,22 @@ const registerUser = async (formData: FormData) => {
   const name = formData.get("name") as string;
   const bio = formData.get("bio") as string;
 
-  const user = await getClient().mutate({
-    mutation: REGISTERMUTATION,
-    variables: {
+  let user;
+  try {
+    user = await gqlClient.request(REGISTERMUTATION, {
       username: username,
       password: password,
       name: name,
       bio: bio,
-    },
-  });
-
-  if (user.errors) {
-    // console.log(user.errors);
+    });
+  } catch (err) {
+    console.log(err);
     return;
   }
 
   signIn("credentials", {
-    username: user.data!.addUser?.user?.username,
-    password: user.data!.addUser?.user?.password,
+    username: user.addUser?.user?.username,
+    password: user.addUser?.user?.password,
     callbackUrl: "/",
     redirect: false,
   })
@@ -100,6 +100,9 @@ const Register = async () => {
             className="max-w-xs"
           />
           <Button type="submit">Register</Button>
+          <Link href="/login" as={NextLink}>
+            Already have a account?
+          </Link>
         </form>
       </div>
     </>

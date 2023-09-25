@@ -1,8 +1,8 @@
 import React from "react";
 import { NextAuthProvider } from "./nextAuth-provider";
 import { UIProvider } from "./nextUI-provider";
-import { ApolloWrapper } from "./apollo-provider";
 import { Session } from "next-auth";
+import QueryWrapper from "./query-provider";
 export function Providers({
   children,
   session,
@@ -12,9 +12,9 @@ export function Providers({
 }) {
   return (
     <NextAuthProvider session={session}>
-      <ApolloWrapper>
+      <QueryWrapper>
         <UIProvider>{children}</UIProvider>
-      </ApolloWrapper>
+      </QueryWrapper>
     </NextAuthProvider>
   );
 }

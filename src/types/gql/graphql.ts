@@ -14,6 +14,20 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  /** The `File` scalar type represents a file upload. */
+  File: { input: any; output: any; }
+};
+
+export type Avatar = {
+  __typename?: 'Avatar';
+  publicID?: Maybe<Scalars['String']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+};
+
+export type Media = {
+  __typename?: 'Media';
+  publicID?: Maybe<Scalars['String']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
 };
 
 export type Mutation = {
@@ -30,10 +44,12 @@ export type Mutation = {
 export type MutationAddTweetArgs = {
   authorID: Scalars['String']['input'];
   content: Scalars['String']['input'];
+  file?: InputMaybe<Scalars['File']['input']>;
 };
 
 
 export type MutationAddUserArgs = {
+  avatar?: InputMaybe<Scalars['File']['input']>;
   bio?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -54,11 +70,13 @@ export type MutationLoginUserArgs = {
 
 export type MutationUpdateTweetArgs = {
   content: Scalars['String']['input'];
+  file?: InputMaybe<Scalars['File']['input']>;
   tweet_id: Scalars['ID']['input'];
 };
 
 
 export type MutationUpdateUserArgs = {
+  avatar?: InputMaybe<Scalars['File']['input']>;
   bio?: InputMaybe<Scalars['String']['input']>;
   followingToAdd?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   followingToRemove?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
@@ -108,10 +126,12 @@ export type Tweet = {
   content?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
+  media?: Maybe<Media>;
 };
 
 export type User = {
   __typename?: 'User';
+  avatar?: Maybe<Avatar>;
   bio?: Maybe<Scalars['String']['output']>;
   followers?: Maybe<Array<Maybe<User>>>;
   following?: Maybe<Array<Maybe<User>>>;

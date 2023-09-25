@@ -16,9 +16,10 @@ import {
   DropdownTrigger,
 } from "@nextui-org/dropdown";
 import { signOut } from "next-auth/react";
-import { useQuery } from "@apollo/experimental-nextjs-app-support/ssr";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function NavbarComp() {
+  const queryClient = useQueryClient();
   return (
     <Navbar>
       <NavbarBrand>
@@ -63,7 +64,10 @@ export default function NavbarComp() {
             }}
           >
             <DropdownItem
-              onClick={() => signOut()}
+              onClick={() => {
+                signOut();
+                queryClient.removeQueries(); // clear cache on logout
+              }}
               key="logout"
               startContent={<LogOut />}
             >

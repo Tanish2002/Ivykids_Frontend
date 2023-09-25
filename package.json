@@ -10,8 +10,6 @@
     "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
-    "@apollo/client": "3.8.0-rc.2",
-    "@apollo/experimental-nextjs-app-support": "^0.4.2",
     "@nextui-org/avatar": "^2.0.21",
     "@nextui-org/button": "2.0.18",
     "@nextui-org/card": "^2.0.21",
@@ -24,16 +22,19 @@
     "@nextui-org/spinner": "^2.0.19",
     "@nextui-org/system": "2.0.7",
     "@nextui-org/theme": "2.1.6",
+    "@tanstack/react-query": "5.0.0-beta.35",
+    "@tanstack/react-query-next-experimental": "5.0.0-beta.35",
     "@types/node": "20.5.7",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.15",
+    "awesome-graphql-client": "^1.0.0",
     "eslint": "8.48.0",
-    "eslint-config-next": "13.4.19",
+    "eslint-config-next": "13.5.2",
     "framer-motion": "^10.16.4",
     "graphql": "^16.8.0",
     "moment": "^2.29.4",
-    "next": "13.4.19",
+    "next": "13.5.2",
     "next-auth": "^4.23.1",
     "next-themes": "^0.2.1",
     "postcss": "8.4.29",
@@ -45,10 +46,11 @@
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.0",
     "@graphql-codegen/client-preset": "4.1.0",
+    "@graphql-codegen/introspection": "4.0.0",
     "@graphql-codegen/typescript": "^4.0.1",
     "@graphql-typed-document-node/core": "^3.2.0",
+    "encoding": "^0.1.13",
     "ts-invariant": "^0.10.3",
-    "typescript": "5.0.4",
-    "@graphql-codegen/introspection": "4.0.0"
+    "typescript": "5.0.4"
   }
 }

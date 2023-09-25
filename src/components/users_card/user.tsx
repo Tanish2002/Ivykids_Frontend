@@ -1,9 +1,10 @@
 "use client";
-import { GETUSER, UPDATEUSER } from "@/utils/queries";
-import { useMutation } from "@apollo/client";
+import { gqlClient } from "@/lib/query-client";
+import { UPDATEUSER } from "@/utils/queries";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Card, CardHeader } from "@nextui-org/card";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import { User } from "react-feather";
 
@@ -23,8 +24,26 @@ const UserCard = ({
   reset_is_followed,
 }: UserCardProps) => {
   const [isFollowed, setIsFollowed] = React.useState(false);
-  const [editUser] = useMutation(UPDATEUSER, {
-    refetchQueries: [GETUSER],
+
+  const queryClient = useQueryClient();
+  const editUser = useMutation({
+    mutationFn: async (addUser: boolean) => {
+      return gqlClient.request(
+        UPDATEUSER,
+        addUser
+          ? {
+            user_id: current_user_id,
+            followingToAdd: [user_id],
+          }
+          : {
+            user_id: current_user_id,
+            followingToRemove: [user_id],
+          },
+      );
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["GETUSER"] });
+    },
   });
 
   useEffect(() => {
@@ -59,19 +78,9 @@ const UserCard = ({
             onPress={() => {
               setIsFollowed(!isFollowed);
               if (!isFollowed) {
-                editUser({
-                  variables: {
-                    user_id: current_user_id,
-                    followingToAdd: [user_id],
-                  },
-                });
+                editUser.mutate(true);
               } else {
-                editUser({
-                  variables: {
-                    user_id: current_user_id,
-                    followingToRemove: [user_id],
-                  },
-                });
+                editUser.mutate(false);
               }
             }}
           >

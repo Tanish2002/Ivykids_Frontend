@@ -1,8 +1,15 @@
 "use client";
 import { GETFOLLOWINGTWEETS, GETUSERTWEETS } from "@/utils/queries";
+import { TweetsQuery, FollowingTweetsQuery } from "@/types/gql/graphql";
 import TweetCard from "./tweet_card";
-import { useSuspenseQuery } from "@apollo/client";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { gqlClient } from "@/lib/query-client";
 
+function isTweetsQuery(
+  query: FollowingTweetsQuery | TweetsQuery,
+): query is TweetsQuery {
+  return (query as TweetsQuery).tweets !== undefined; // Replace with an actual property check
+}
 const TweetList = ({
   user_id,
   current_user,
@@ -10,29 +17,21 @@ const TweetList = ({
   user_id: string;
   current_user?: boolean;
 }) => {
-  const userPosts = useSuspenseQuery(
-    GETUSERTWEETS,
-    current_user
-      ? {
-        variables: { user_id: user_id },
-      }
-      : { skip: true },
-  );
-  const followingPosts = useSuspenseQuery(
-    GETFOLLOWINGTWEETS,
-    !current_user
-      ? {
-        variables: { user_id: user_id },
-      }
-      : { skip: true },
-  );
+  const posts = useSuspenseQuery({
+    queryKey: ["GETUSERTWEETS"],
+    queryFn: async () => {
+      if (current_user) return gqlClient.request(GETUSERTWEETS, { user_id });
+      return gqlClient.request(GETFOLLOWINGTWEETS, { user_id });
+    },
+  });
+
   return (
     <>
-      {current_user ? (
-        userPosts.error ? (
-          <div>Error {`${userPosts.error}`}</div>
+      {isTweetsQuery(posts.data) ? (
+        posts.error ? (
+          <div>Error {`${posts.error}`}</div>
         ) : (
-          userPosts.data.tweets?.map((post, idx) => (
+          posts.data?.tweets?.map((post, idx) => (
             <TweetCard
               key={idx}
               name={post?.author?.name!}
@@ -43,10 +42,10 @@ const TweetList = ({
             />
           ))
         )
-      ) : followingPosts.error ? (
-        <div>Error {`${followingPosts.error}`}</div>
+      ) : posts.error ? (
+        <div>Error {`${posts.error}`}</div>
       ) : (
-        followingPosts.data.tweetsByFollowing?.map((post, idx) => (
+        posts.data?.tweetsByFollowing?.map((post, idx) => (
           <TweetCard
             key={idx}
             name={post?.author?.name!}

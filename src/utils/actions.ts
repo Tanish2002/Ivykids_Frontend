@@ -1,9 +1,9 @@
 "use server";
 
-import { getClient } from "@/lib/apollo-client";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth/next";
 import { ADDTWEET } from "./queries";
+import { gqlClient } from "@/lib/query-client";
 
 export async function createTweet(formData: FormData) {
   const session = await getServerSession(authOptions);
@@ -12,8 +12,8 @@ export async function createTweet(formData: FormData) {
     return;
   }
 
-  await getClient().mutate({
-    mutation: ADDTWEET,
-    variables: { authorID: session!.user.id, content: content },
+  await gqlClient.request(ADDTWEET, {
+    authorID: session!.user.id,
+    content: content,
   });
 }

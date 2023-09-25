@@ -1,9 +1,7 @@
 import { LOGINMUTATION } from "@/utils/queries";
-import { useMutation } from "@apollo/client";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getClient } from "./apollo-client";
-import { signOut } from "next-auth/react";
+import { gqlClient } from "./query-client";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -21,25 +19,23 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const u = await getClient().mutate({
-          mutation: LOGINMUTATION,
-          variables: {
+        let user;
+        try {
+          user = await gqlClient.request(LOGINMUTATION, {
             username: credentials!.username,
             password: credentials!.password,
-          },
-        });
-
-        if (u.errors) {
-          console.log(u.errors);
+          });
+        } catch (err) {
+          console.log(err);
           return null;
         }
-        const id = u.data?.loginUser?.user?.id;
-        const username = u.data?.loginUser?.user?.username;
-        const name = u.data?.loginUser?.user?.name;
-        const bio = u.data?.loginUser?.user?.bio;
-        const token = u.data?.loginUser?.token;
-        const followers = u.data?.loginUser?.user?.followers?.length;
-        const following = u.data?.loginUser?.user?.following?.length;
+        const id = user.loginUser?.user?.id;
+        const username = user.loginUser?.user?.username;
+        const name = user.loginUser?.user?.name;
+        const bio = user.loginUser?.user?.bio;
+        const token = user.loginUser?.token;
+        const followers = user.loginUser?.user?.followers?.length;
+        const following = user.loginUser?.user?.following?.length;
 
         if (
           id &&
@@ -88,7 +84,6 @@ export const authOptions: NextAuthOptions = {
   events: {
     async signOut() {
       console.log("Signing OUT");
-      await getClient().resetStore();
     },
   },
 };
