@@ -4,27 +4,45 @@ import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody } from "@nextui-org/card";
 import { Textarea } from "@nextui-org/input";
-import React, { useState } from "react";
-import { Image as ImageIcon, User, Video } from "react-feather";
+import React, { ChangeEvent, useRef, useState } from "react";
+import { Image as ImageIcon, Trash2, Video } from "react-feather";
 import { experimental_useFormStatus as useFormStatus } from "react-dom";
-const TweetInput = () => {
+const TweetInput = ({ avatar_url }: { avatar_url: string | null }) => {
   const { pending } = useFormStatus();
   const [content, setContent] = useState("");
   const [validation, setValidation] = useState<"valid" | "invalid">("valid");
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const imageRef = useRef<HTMLInputElement>(null);
+  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setSelectedImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  const handleRemoveImage = () => {
+    setSelectedImage(null);
+    imageRef.current!.value = "";
+  };
   return (
     <Card>
       <CardBody className="grid grid-cols-[5fr_95fr]">
-        <Avatar className="mr-5 mt-3" icon={<User />} />
+        <Avatar className="mr-5 mt-3" src={avatar_url ?? ""} showFallback />
         <form
           action={createTweet}
           onSubmit={(e) => {
             if (content === "") {
               e.preventDefault();
               setValidation("invalid");
+              setSelectedImage(null);
               return false;
             }
             setValidation("valid");
             setContent("");
+            setSelectedImage(null);
             return true;
           }}
         >
@@ -43,25 +61,45 @@ const TweetInput = () => {
                 <label htmlFor="image-input">
                   <ImageIcon className="stroke-violet-400" size={20} />
                 </label>
-                <input className="hidden" id="image-input" type="file" />
+                <input
+                  className="hidden"
+                  ref={imageRef}
+                  name="image"
+                  id="image-input"
+                  accept=".jpg, .jpeg, .png"
+                  onChange={handleImageChange}
+                  multiple={false}
+                  type="file"
+                />
               </Button>
               <Button isIconOnly aria-label="Image">
                 <label htmlFor="video-input">
                   <Video className="stroke-violet-400" size={20} />
                 </label>
-                <input className="hidden" id="video-input" type="file" />
+                <input
+                  className="hidden"
+                  name="video"
+                  id="video-input"
+                  type="file"
+                />
               </Button>
             </div>
-            {pending ? (
-              <Button isLoading isDisabled color="secondary">
-                Adding
-              </Button>
-            ) : (
-              <Button type="submit" color="primary">
-                Tweet
-              </Button>
-            )}
+            <Button
+              isLoading={pending}
+              isDisabled={pending}
+              color={pending ? "secondary" : "primary"}
+            >
+              {pending ? "Adding" : "Tweet"}
+            </Button>
           </div>
+          {selectedImage && (
+            <div>
+              <img src={selectedImage} alt="Selected" />
+              <Button isIconOnly onClick={handleRemoveImage}>
+                <Trash2 />
+              </Button>
+            </div>
+          )}
         </form>
       </CardBody>
     </Card>

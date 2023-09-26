@@ -37,6 +37,8 @@ const TweetList = ({
               name={post?.author?.name!}
               username={post?.author?.username!}
               content={post?.content!}
+              media_url={post?.media?.url!}
+              avatar_url={post?.author?.avatar?.url!}
               timestamp={post?.createdAt!}
               tweet_id={post?.id!}
             />
@@ -51,6 +53,8 @@ const TweetList = ({
             name={post?.author?.name!}
             username={post?.author?.username!}
             content={post?.content!}
+              avatar_url={post?.author?.avatar?.url!}
+            media_url={post?.media?.url!}
             timestamp={post?.createdAt!}
           />
         ))

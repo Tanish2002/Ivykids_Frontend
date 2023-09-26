@@ -3,7 +3,7 @@ import UserCard from "./user";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { GETUSERNOTFOLLOWING } from "@/utils/queries";
 import { Button } from "@nextui-org/button";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { gqlClient } from "@/lib/query-client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
@@ -34,6 +34,7 @@ const UsersCard = ({ user_id }: { user_id: string }) => {
                 name={nonFollower?.name!}
                 user_id={nonFollower?.id!}
                 current_user_id={user_id}
+                avatar_url={nonFollower?.avatar?.url}
                 reset_is_followed={resetIsFollowed}
               />
             ))

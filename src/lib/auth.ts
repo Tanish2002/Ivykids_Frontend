@@ -36,6 +36,7 @@ export const authOptions: NextAuthOptions = {
         const token = user.loginUser?.token;
         const followers = user.loginUser?.user?.followers?.length;
         const following = user.loginUser?.user?.following?.length;
+        const avatar_url = user.loginUser?.user?.avatar?.url;
 
         if (
           id &&
@@ -50,6 +51,7 @@ export const authOptions: NextAuthOptions = {
             username: username,
             name: name,
             bio: bio ?? null,
+            avatar_url: avatar_url ?? "",
             token: token,
             followers: followers,
             following: following,
@@ -75,6 +77,7 @@ export const authOptions: NextAuthOptions = {
         session.user.username = token.user.username;
         session.user.name = token.user.name;
         session.user.bio = token.user.bio;
+        session.user.avatar_url = token.user.avatar_url;
         session.user.followers = token.user.followers;
         session.user.following = token.user.following;
       }

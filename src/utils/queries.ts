@@ -9,6 +9,9 @@ export const LOGINMUTATION = graphql(/* GraphQL */ `
         username
         name
         bio
+        avatar {
+          url
+        }
         followers {
           id
         }
@@ -26,8 +29,15 @@ export const REGISTERMUTATION = graphql(/* GraphQL */ `
     $password: String!
     $name: String!
     $bio: String
+    $avatar: File
   ) {
-    addUser(username: $username, password: $password, name: $name, bio: $bio) {
+    addUser(
+      username: $username
+      password: $password
+      name: $name
+      bio: $bio
+      avatar: $avatar
+    ) {
       token
       user {
         id
@@ -35,6 +45,9 @@ export const REGISTERMUTATION = graphql(/* GraphQL */ `
         name
         password
         bio
+        avatar {
+          url
+        }
         followers {
           id
         }
@@ -47,8 +60,8 @@ export const REGISTERMUTATION = graphql(/* GraphQL */ `
 `);
 
 export const ADDTWEET = graphql(/* GraphQL */ `
-  mutation AddTweet($content: String!, $authorID: String!) {
-    addTweet(content: $content, authorID: $authorID) {
+  mutation AddTweet($content: String!, $authorID: String!, $file: File) {
+    addTweet(content: $content, authorID: $authorID, file: $file) {
       id
       content
     }
@@ -64,6 +77,12 @@ export const GETFOLLOWINGTWEETS = graphql(/* GraphQL */ `
       author {
         username
         name
+        avatar {
+          url
+        }
+      }
+      media {
+        url
       }
     }
   }
@@ -75,6 +94,9 @@ export const GETUSERNOTFOLLOWING = graphql(/* GraphQL */ `
       id
       username
       name
+      avatar {
+        url
+      }
     }
   }
 `);
@@ -87,9 +109,22 @@ export const GETUSER = graphql(/* GraphQL */ `
       bio
       followers {
         id
+        username
+        name
+        avatar {
+          url
+        }
       }
       following {
         id
+        username
+        name
+        avatar {
+          url
+        }
+      }
+      avatar {
+        url
       }
     }
   }
@@ -104,6 +139,12 @@ export const GETUSERTWEETS = graphql(/* GraphQL */ `
       author {
         username
         name
+        avatar {
+          url
+        }
+      }
+      media {
+        url
       }
     }
   }
@@ -123,6 +164,7 @@ export const UPDATEUSER = graphql(/*GraphQL */ `
     $bio: String
     $followingToAdd: [ID]
     $followingToRemove: [ID]
+    $avatar: File
   ) {
     updateUser(
       user_id: $user_id
@@ -130,12 +172,17 @@ export const UPDATEUSER = graphql(/*GraphQL */ `
       followingToRemove: $followingToRemove
       name: $name
       bio: $bio
+      avatar: $avatar
     ) {
       id
       username
       name
       password
       bio
+      avatar {
+        url
+        publicID
+      }
     }
   }
 `);

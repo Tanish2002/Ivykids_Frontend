@@ -10,6 +10,7 @@ declare module "next-auth/jwt" {
     username: string;
     name: string;
     bio: string | null;
+    avatar_url: string | null;
     token: string;
     followers: number;
     following: number;
@@ -26,6 +27,7 @@ declare module "next-auth" {
     username: string;
     name: string;
     bio: string | null;
+    avatar_url: string | null;
     token: string;
     followers: number;
     following: number;
