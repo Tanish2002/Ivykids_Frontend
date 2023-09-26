@@ -14,7 +14,7 @@ const FollowingUsersCard = ({ user_id }: { user_id: string }) => {
       return gqlClient.request(GETUSER, { user_id: user_id });
     },
   });
-  const [resetIsFollowed, setResetIsFollowed] = useState(false); // Add this state
+  const [resetIsFollowed, setResetIsFollowed] = useState(false);
   return (
     <Card className="max-w-sm max-h-screen">
       <CardHeader className="text-center">

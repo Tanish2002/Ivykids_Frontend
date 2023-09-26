@@ -3,7 +3,7 @@ import UserCard from "./user";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { GETUSERNOTFOLLOWING } from "@/utils/queries";
 import { Button } from "@nextui-org/button";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { gqlClient } from "@/lib/query-client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
@@ -14,11 +14,11 @@ const UsersCard = ({ user_id }: { user_id: string }) => {
       return gqlClient.request(GETUSERNOTFOLLOWING, { user_id: user_id });
     },
   });
-  const [resetIsFollowed, setResetIsFollowed] = useState(false); // Add this state
+  const [resetIsFollowed, setResetIsFollowed] = useState(false);
   return (
-    <Card className="max-w-sm max-h-screen">
-      <CardHeader className="text-center">
-        <h1 className="text-xl font-semibold mt-3">Who to Follow</h1>
+    <Card className="max-w-sm">
+      <CardHeader className="justify-center">
+        <h2 className="text-xl font-bold">Who to Follow</h2>
       </CardHeader>
 
       <CardBody>

@@ -33,13 +33,13 @@ const UserCard = ({
         UPDATEUSER,
         addUser
           ? {
-            user_id: current_user_id,
-            followingToAdd: [user_id],
-          }
+              user_id: current_user_id,
+              followingToAdd: [user_id],
+            }
           : {
-            user_id: current_user_id,
-            followingToRemove: [user_id],
-          },
+              user_id: current_user_id,
+              followingToRemove: [user_id],
+            },
       );
     },
     onSuccess: async () => {
@@ -60,49 +60,37 @@ const UserCard = ({
   }, [reset_is_followed]);
 
   return (
-    <>
-      <Card className="max-w-sm mb-2 shadow-none border-none">
-        <CardHeader className="justify-between">
-          <div className="flex gap-5">
-            <Avatar
-              radius="full"
-              size="md"
-              src={avatar_url ?? ""}
-              showFallback
-            />
-            <div className="flex flex-col gap-1 items-start justify-center">
-              <h4 className="text-small font-semibold leading-none text-default-600">
-                {name}
-              </h4>
-              <h5 className="text-small tracking-tight text-default-400">
-                @{username}
-              </h5>
-            </div>
+    <Card className="max-w-sm mb-2 shadow-none border-none">
+      <CardHeader className="justify-between">
+        <div className="flex gap-5">
+          <Avatar radius="full" size="md" src={avatar_url ?? ""} showFallback />
+          <div>
+            <h4 className="text-small font-semibold leading-none text-default-600">
+              {name}
+            </h4>
+            <h5 className="text-small tracking-tight text-default-400">
+              @{username}
+            </h5>
           </div>
-          <Button
-            className={
-              isFollowed
-                ? "bg-transparent text-foreground border-default-200"
-                : ""
+        </div>
+        <Button
+          color="primary"
+          radius="full"
+          size="sm"
+          variant={isFollowed ? "bordered" : "solid"}
+          onPress={() => {
+            setIsFollowed(!isFollowed);
+            if (!isFollowed) {
+              editUser.mutate(true);
+            } else {
+              editUser.mutate(false);
             }
-            color="primary"
-            radius="full"
-            size="sm"
-            variant={isFollowed ? "bordered" : "solid"}
-            onPress={() => {
-              setIsFollowed(!isFollowed);
-              if (!isFollowed) {
-                editUser.mutate(true);
-              } else {
-                editUser.mutate(false);
-              }
-            }}
-          >
-            {isFollowed ? "Unfollow" : "Follow"}
-          </Button>
-        </CardHeader>
-      </Card>
-    </>
+          }}
+        >
+          {isFollowed ? "Unfollow" : "Follow"}
+        </Button>
+      </CardHeader>
+    </Card>
   );
 };
 

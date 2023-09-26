@@ -42,19 +42,21 @@ const TweetCard = ({
           <Avatar src={avatar_url ?? ""} showFallback />
           <div className="grow">
             <h2>{name}</h2>
-            <h4 className="text-tiny">@{username}</h4>
-            <p className="text-tiny text-default-400">
-              {getTimeAgo(timestamp)}
-            </p>
+            <div>
+              <span className="text-sm">@{username}</span>
+              <span className="text-tiny text-default-400 before:content-['∙'] before:mx-2">
+                {getTimeAgo(timestamp)}
+              </span>
+            </div>
           </div>
           {tweet_id && <TweetCardDropDown tweet_id={tweet_id} />}
         </div>
       </CardHeader>
       <Divider />
-      <CardBody className="overflow-visible py-2 flex px-8">
-        <p className="text-center">{content}</p>
+      <CardBody>
+        <p className="text-center mb-4">{content}</p>
         {media_url && (
-          <div className="relative h-72">
+          <div className="relative aspect-square">
             <NextImage
               // as={NextImage}
               alt="Card background"

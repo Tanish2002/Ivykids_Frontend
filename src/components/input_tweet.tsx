@@ -27,6 +27,7 @@ const TweetInput = ({ avatar_url }: { avatar_url: string | null }) => {
     setSelectedImage(null);
     imageRef.current!.value = "";
   };
+
   return (
     <Card>
       <CardBody className="grid grid-cols-[5fr_95fr]">
@@ -55,6 +56,15 @@ const TweetInput = ({ avatar_url }: { avatar_url: string | null }) => {
             name="content"
             required
           />
+
+          {selectedImage && (
+            <img
+              src={selectedImage}
+              alt="Selected"
+              className="rounded-lg my-4"
+            />
+          )}
+
           <div className="flex justify-between mt-2">
             <div className="flex gap-2">
               <Button isIconOnly aria-label="Image">
@@ -83,23 +93,21 @@ const TweetInput = ({ avatar_url }: { avatar_url: string | null }) => {
                   type="file"
                 />
               </Button>
+              {selectedImage && (
+                <Button isIconOnly onClick={handleRemoveImage} color="danger">
+                  <Trash2 />
+                </Button>
+              )}
             </div>
             <Button
               isLoading={pending}
               isDisabled={pending}
+              type="submit"
               color={pending ? "secondary" : "primary"}
             >
               {pending ? "Adding" : "Tweet"}
             </Button>
           </div>
-          {selectedImage && (
-            <div>
-              <img src={selectedImage} alt="Selected" />
-              <Button isIconOnly onClick={handleRemoveImage}>
-                <Trash2 />
-              </Button>
-            </div>
-          )}
         </form>
       </CardBody>
     </Card>
